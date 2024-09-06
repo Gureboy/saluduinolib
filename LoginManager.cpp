@@ -11,7 +11,7 @@ bool LoginManager::login(String username, String password) {
         loginAttempts++;
         if (loginAttempts >= 5) {
             // Bloquear después de 5 intentos
-            delay(30000);  // Bloqueo de 30 segundos
+            delay(3000000);  // Bloqueo de 30 mins
         }
         return false;
     }
