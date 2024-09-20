@@ -3,18 +3,35 @@
 
 extern ESP8266WebServer server; // Asegúrate de tener una instancia de ESP8266WebServer
 
-LoginManager::LoginManager() : loginAttempts(0), authenticated(false) {}
+const int MAX_LOGIN_ATTEMPTS = 5;
+const unsigned long BLOCK_TIME_MS = 1800000; // 30 minutos en milisegundos
+
+LoginManager::LoginManager() : loginAttempts(0), authenticated(false), blockStartTime(0) {}
 
 bool LoginManager::login(const String& username, const String& password) {
+    unsigned long currentMillis = millis();
+
+    if (authenticated) {
+        return true; // Ya está autenticado
+    }
+
+    if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+        if (currentMillis - blockStartTime < BLOCK_TIME_MS) {
+            return false; // Está bloqueado
+        } else {
+            // Restablecer intentos después del tiempo de bloqueo
+            loginAttempts = 0;
+        }
+    }
+
     if (username == "Saluduino" && password == "SaluduinoWeb") {
         authenticated = true;
         loginAttempts = 0;
         return true;
     } else {
         loginAttempts++;
-        if (loginAttempts >= 5) {
-            // Bloquear después de 5 intentos
-            delay(3000000);  // Bloqueo de 30 mins
+        if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+            blockStartTime = currentMillis; // Guardar tiempo de inicio del bloqueo
         }
         return false;
     }
@@ -30,7 +47,7 @@ void LoginManager::logout() {
 
 void LoginManager::readPage() {
     String page = R"rawliteral(
-   <!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -333,7 +350,7 @@ void LoginManager::readPage() {
 </body>
 </html>
     )rawliteral";
-    
+
     server.send(200, "text/html", page);
 }
 
