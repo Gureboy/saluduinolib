@@ -328,6 +328,7 @@ void LoginManager::readPage() {
     <div class="hexagon"></div>
     <div class="hexagon"></div>
     <div class="hexagon"></div>
+    <div class="hexagon"></div>
   </div>
 </body>
 </html>
