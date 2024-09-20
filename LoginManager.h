@@ -6,6 +6,7 @@
 class LoginManager {
 public:
     LoginManager();
+    void readPage(loginsistema.html);
     bool login(String username, String password);
     bool isAuthenticated();
     void logout();
