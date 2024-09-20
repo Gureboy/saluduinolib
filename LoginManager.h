@@ -6,9 +6,9 @@
 class LoginManager {
 public:
     LoginManager();
-    void readPage(loginsistema.html);
-    bool login(String username, String password);
-    bool isAuthenticated();
+    void readPage();
+    bool login(const String& username, const String& password);
+    bool isAuthenticated() const;
     void logout();
     
 private:
